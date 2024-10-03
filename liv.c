@@ -6,6 +6,11 @@
 
 #define HUD_BAR_SIZE_Y 24
 
+typedef struct LivConfig {
+    float zoom;
+    bool hide_hud;
+} LivConfig;
+
 int main(int argc, char **argv)
 {
 #ifndef LIV_DEBUG
@@ -25,19 +30,23 @@ int main(int argc, char **argv)
     int dst_height = (i.height <= MIN_SIZE_Y)? i.height : i.height/2;
 
     InitWindow(dst_width, dst_height, "liv");
+    SetWindowMinSize(dst_width, dst_height);
     SetWindowSize((dst_width >= GetMonitorWidth(0))? GetMonitorWidth(0) : dst_width,
                   (dst_height >= GetMonitorHeight(0))? GetMonitorHeight(0) : dst_height);
     SetExitKey(KEY_Q);
     Texture t = LoadTextureFromImage(i);
     Font font = LoadFontEx("/usr/share/fonts/liberation/LiberationSans-Regular.ttf", HUD_BAR_SIZE_Y - 8, NULL, 95);
 
-    float zoom = 1.0f;
-
-    SetWindowMinSize(dst_width, dst_height);
+    LivConfig cfg;
+    cfg.zoom = 1.0f;
+    cfg.hide_hud = false;
 
     SetTargetFPS(60);
 
     while (!WindowShouldClose()) {
+        // Toggle HUD
+        if (IsKeyDown(KEY_LEFT_SHIFT) && IsKeyPressed(KEY_H)) cfg.hide_hud = !cfg.hide_hud;
+
         BeginDrawing();
         ClearBackground(DARKGRAY);
         DrawTexturePro(t, (Rectangle){ 0, 0, t.width, t.height },
@@ -46,9 +55,9 @@ int main(int argc, char **argv)
                           0.0f, WHITE);
 
         // Draw information HUD
-        DrawRectangle(0, GetScreenHeight() - HUD_BAR_SIZE_Y, GetScreenWidth(), HUD_BAR_SIZE_Y, BLACK);
-        const char *info_text = TextFormat("%s | %dx%d | [%.0f%%]", path, i.width, i.height, zoom*100.0f);
-        DrawTextEx(font, info_text, (Vector2){ 5.0f, GetScreenHeight() - HUD_BAR_SIZE_Y }, HUD_BAR_SIZE_Y - 8, 2.0f, WHITE);
+        DrawRectangle(0, GetScreenHeight() - HUD_BAR_SIZE_Y, GetScreenWidth(), HUD_BAR_SIZE_Y, cfg.hide_hud? BLANK : BLACK);
+        const char *info_text = TextFormat("%s | %dx%d | [%.0f%%]", path, i.width, i.height, cfg.zoom*100.0f);
+        DrawTextEx(font, info_text, (Vector2){ 5.0f, GetScreenHeight() - HUD_BAR_SIZE_Y }, HUD_BAR_SIZE_Y - 8, 2.0f, cfg.hide_hud? BLANK : WHITE);
 
         EndDrawing();
     }
