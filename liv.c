@@ -8,6 +8,9 @@
 
 int main(int argc, char **argv)
 {
+#ifndef LIV_DEBUG
+    SetTraceLogLevel(LOG_NONE);
+#endif
     if (argc < 2) {
         printf("usage: %s <image>\n", argv[0]);
         printf("    where <image> format is png, bmp, tga, jpg, qoi\n");

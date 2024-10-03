@@ -27,9 +27,15 @@ LDLIBS='-L./lib/ -lraylib -lm -ldl -lpthread -lGL'
 INCLUDE='-I./include/'
 OUT=liv
 
+DEBUG_FLAG='-DLIV_DEBUG'
+
 existing=$(check_existing_dirs)
 if [[ $existing = "false" ]]; then
     setup_raylib
 fi
 
-$CC $SRC $LDLIBS $INCLUDE -o $OUT
+if [[ $1 = 'debug' ]]; then
+    $CC $SRC $LDLIBS $INCLUDE $DEBUG_FLAG -o $OUT
+else
+    $CC $SRC $LDLIBS $INCLUDE -o $OUT
+fi
