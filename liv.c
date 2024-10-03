@@ -25,6 +25,8 @@ typedef struct LivState {
     LivConfig cfg;
 } LivState;
 
+bool check_path(const char *path);
+
 void init(LivState *state, const char *path);
 void deinit(LivState *state);
 
@@ -46,6 +48,11 @@ int main(int argc, char **argv)
 
     LivState state;
     const char *path = argv[1];
+    if (!check_path(path)) {
+        printf("%s: bad path: this is not a valid input!\n", argv[0]);
+        return 1;
+    }
+
     init(&state, path);
 
     SetTargetFPS(60);
@@ -90,6 +97,13 @@ int main(int argc, char **argv)
 
     deinit(&state);
     return 0;
+}
+
+bool check_path(const char *path)
+{
+    const char *path_lower = TextToLower(path);
+    return IsFileExtension(path_lower, ".png") || IsFileExtension(path_lower, ".bmp") ||
+        IsFileExtension(path_lower, ".tga") || IsFileExtension(path_lower, ".jpg") || IsFileExtension(path_lower, ".qoi");
 }
 
 void init(LivState *state, const char *path)
