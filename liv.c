@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <math.h>
 #include "raylib.h"
 
 #define MIN_SIZE_X     800
@@ -8,6 +9,7 @@
 
 typedef struct LivConfig {
     float zoom;
+    float rotation;
     bool hide_hud;
 } LivConfig;
 
@@ -39,6 +41,7 @@ int main(int argc, char **argv)
 
     LivConfig cfg;
     cfg.zoom = 1.0f;
+    cfg.rotation = 0.0f;
     cfg.hide_hud = false;
 
     SetTargetFPS(60);
@@ -47,12 +50,19 @@ int main(int argc, char **argv)
         // Toggle HUD
         if (IsKeyDown(KEY_LEFT_SHIFT) && IsKeyPressed(KEY_H)) cfg.hide_hud = !cfg.hide_hud;
 
+        // Rotate
+        // E - 90 degrees anticlockwise
+        // R - 90 degrees clockwise
+        if (fabs(cfg.rotation) >= 360) cfg.rotation = 0;
+        if (IsKeyPressed(KEY_E)) cfg.rotation -= 90;
+        if (IsKeyPressed(KEY_R)) cfg.rotation += 90;
+
         BeginDrawing();
         ClearBackground(DARKGRAY);
         DrawTexturePro(t, (Rectangle){ 0, 0, t.width, t.height },
                           (Rectangle){ GetScreenWidth()/2, GetScreenHeight()/2, dst_width, dst_height },
                           (Vector2){ dst_width/2, dst_height/2 },
-                          0.0f, WHITE);
+                          cfg.rotation, WHITE);
 
         // Draw information HUD
         DrawRectangle(0, GetScreenHeight() - HUD_BAR_SIZE_Y, GetScreenWidth(), HUD_BAR_SIZE_Y, cfg.hide_hud? BLANK : BLACK);
