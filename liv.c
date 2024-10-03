@@ -21,8 +21,9 @@ int main(int argc, char **argv)
     int dst_width = (i.width <= MIN_SIZE_X)? i.width : i.width/2;
     int dst_height = (i.height <= MIN_SIZE_Y)? i.height : i.height/2;
 
-    InitWindow((dst_width >= GetMonitorWidth(0))? GetMonitorWidth(0) : dst_width,
-               (dst_height >= GetMonitorHeight(0))? GetMonitorHeight(0) : dst_height, "liv");
+    InitWindow(dst_width, dst_height, "liv");
+    SetWindowSize((dst_width >= GetMonitorWidth(0))? GetMonitorWidth(0) : dst_width,
+                  (dst_height >= GetMonitorHeight(0))? GetMonitorHeight(0) : dst_height);
     SetExitKey(KEY_Q);
     Texture t = LoadTextureFromImage(i);
     Font font = LoadFontEx("/usr/share/fonts/liberation/LiberationSans-Regular.ttf", HUD_BAR_SIZE_Y - 8, NULL, 95);
