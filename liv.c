@@ -39,10 +39,16 @@ int main(int argc, char **argv)
     Texture t = LoadTextureFromImage(i);
     Font font = LoadFontEx("/usr/share/fonts/liberation/LiberationSans-Regular.ttf", HUD_BAR_SIZE_Y - 8, NULL, 95);
 
-    LivConfig cfg;
+    LivConfig cfg = { 0 };
     cfg.zoom = 1.0f;
-    cfg.rotation = 0.0f;
+    cfg.rotation = 0.0;
     cfg.hide_hud = false;
+
+    Camera2D camera = { 0 };
+    camera.offset = (Vector2){ GetScreenWidth()/2, GetScreenHeight()/2 };
+    camera.target = (Vector2){ 0.0f, 0.0f };
+    camera.rotation = 0.0f;
+    camera.zoom = cfg.zoom;
 
     SetTargetFPS(60);
 
@@ -57,12 +63,28 @@ int main(int argc, char **argv)
         if (IsKeyPressed(KEY_E)) cfg.rotation -= 90;
         if (IsKeyPressed(KEY_R)) cfg.rotation += 90;
 
+        // Tune zoom
+        camera.zoom = cfg.zoom;
+        if (IsKeyPressed(KEY_Z) && cfg.zoom > 0.25f) cfg.zoom -= .25f;
+        if (IsKeyPressed(KEY_X) && cfg.zoom < 3.0f) cfg.zoom += .25f;
+
+        // Move camera around
+        // Only allowed if the image is too zoomed in.
+        if (cfg.zoom > 1.0f) {
+            if (IsKeyDown(KEY_H)) camera.target.x -= .25f*cfg.zoom*20;
+            if (IsKeyDown(KEY_J)) camera.target.y += .25f*cfg.zoom*20;
+            if (IsKeyDown(KEY_K)) camera.target.y -= .25f*cfg.zoom*20;
+            if (IsKeyDown(KEY_L)) camera.target.x += .25f*cfg.zoom*20;
+        } else camera.target = (Vector2){ 0.0f, 0.0f };
+
         BeginDrawing();
         ClearBackground(DARKGRAY);
+        BeginMode2D(camera);
         DrawTexturePro(t, (Rectangle){ 0, 0, t.width, t.height },
-                          (Rectangle){ GetScreenWidth()/2, GetScreenHeight()/2, dst_width, dst_height },
+                          (Rectangle){ 0, 0, dst_width, dst_height },
                           (Vector2){ dst_width/2, dst_height/2 },
                           cfg.rotation, WHITE);
+        EndMode2D();
 
         // Draw information HUD
         DrawRectangle(0, GetScreenHeight() - HUD_BAR_SIZE_Y, GetScreenWidth(), HUD_BAR_SIZE_Y, cfg.hide_hud? BLANK : BLACK);
