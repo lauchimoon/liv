@@ -14,3 +14,4 @@ lauchi's image viewer
     - Down: J
     - Up: K
     - Right: L
+- Exit: Q
