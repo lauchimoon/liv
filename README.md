@@ -1,6 +1,12 @@
 # liv
 lauchi's image viewer
 
+## Usage
+```sh
+$ ./liv <image>
+    where <image> format is png, bmp, tga, jpg, qoi
+```
+
 ## Controls
 - Toggling information bar: LShift + H
 - Rotation:
@@ -14,4 +20,5 @@ lauchi's image viewer
     - Down: J
     - Up: K
     - Right: L
+- Toggle antialiasing: A
 - Exit: Q

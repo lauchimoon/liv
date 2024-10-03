@@ -12,6 +12,7 @@ typedef struct LivConfig {
     float zoom;
     float rotation;
     bool hide_hud;
+    bool antialiasing;
 } LivConfig;
 
 int main(int argc, char **argv)
@@ -44,6 +45,7 @@ int main(int argc, char **argv)
     cfg.zoom = 1.0f;
     cfg.rotation = 0.0;
     cfg.hide_hud = false;
+    cfg.antialiasing = true;
 
     Camera2D camera = { 0 };
     camera.offset = (Vector2){ GetScreenWidth()/2, GetScreenHeight()/2 };
@@ -79,6 +81,11 @@ int main(int argc, char **argv)
             if (IsKeyDown(KEY_K)) camera.target.y -= ZOOM_CONSTANT*cfg.zoom*20;
             if (IsKeyDown(KEY_L)) camera.target.x += ZOOM_CONSTANT*cfg.zoom*20;
         } else camera.target = (Vector2){ 0.0f, 0.0f };
+
+        // Antialiasing
+        if (cfg.antialiasing) SetTextureFilter(t, TEXTURE_FILTER_BILINEAR);
+        else SetTextureFilter(t, TEXTURE_FILTER_POINT);
+        if (IsKeyPressed(KEY_A)) cfg.antialiasing = !cfg.antialiasing;
 
         BeginDrawing();
         ClearBackground(DARKGRAY);
