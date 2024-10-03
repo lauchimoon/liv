@@ -6,6 +6,7 @@
 #define MIN_SIZE_Y     640
 
 #define HUD_BAR_SIZE_Y 24
+#define ZOOM_CONSTANT  .25f
 
 typedef struct LivConfig {
     float zoom;
@@ -65,16 +66,16 @@ int main(int argc, char **argv)
 
         // Tune zoom
         camera.zoom = cfg.zoom;
-        if (IsKeyPressed(KEY_Z) && cfg.zoom > 0.25f) cfg.zoom -= .25f;
-        if (IsKeyPressed(KEY_X) && cfg.zoom < 3.0f) cfg.zoom += .25f;
+        if (IsKeyPressed(KEY_Z) && cfg.zoom > 0.25f) cfg.zoom -= ZOOM_CONSTANT;
+        if (IsKeyPressed(KEY_X) && cfg.zoom < 3.0f) cfg.zoom += ZOOM_CONSTANT;
 
         // Move camera around
         // Only allowed if the image is too zoomed in.
         if (cfg.zoom > 1.0f) {
-            if (IsKeyDown(KEY_H)) camera.target.x -= .25f*cfg.zoom*20;
-            if (IsKeyDown(KEY_J)) camera.target.y += .25f*cfg.zoom*20;
-            if (IsKeyDown(KEY_K)) camera.target.y -= .25f*cfg.zoom*20;
-            if (IsKeyDown(KEY_L)) camera.target.x += .25f*cfg.zoom*20;
+            if (IsKeyDown(KEY_H)) camera.target.x -= ZOOM_CONSTANT*cfg.zoom*20;
+            if (IsKeyDown(KEY_J)) camera.target.y += ZOOM_CONSTANT*cfg.zoom*20;
+            if (IsKeyDown(KEY_K)) camera.target.y -= ZOOM_CONSTANT*cfg.zoom*20;
+            if (IsKeyDown(KEY_L)) camera.target.x += ZOOM_CONSTANT*cfg.zoom*20;
         } else camera.target = (Vector2){ 0.0f, 0.0f };
 
         BeginDrawing();
