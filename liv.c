@@ -54,6 +54,8 @@ int main(int argc, char **argv)
     SetTargetFPS(60);
 
     while (!WindowShouldClose()) {
+        camera.offset = (Vector2){ GetScreenWidth()/2, GetScreenHeight()/2 };
+
         // Toggle HUD
         if (IsKeyDown(KEY_LEFT_SHIFT) && IsKeyPressed(KEY_H)) cfg.hide_hud = !cfg.hide_hud;
 
